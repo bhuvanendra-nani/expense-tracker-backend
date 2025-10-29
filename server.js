@@ -12,7 +12,20 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors());
+// Restrict CORS to known origins (frontend). Allow no-origin requests for tools like curl/postman.
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://expense-tracker-frontend-ao8o4412g-bhuvanendras-projects.vercel.app'
+];
+app.use(cors({
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) return callback(null, true);
+        return callback(new Error('CORS policy: Origin not allowed'), false);
+    },
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
