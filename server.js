@@ -30,7 +30,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
-app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/auth', require('./routes/userRoutes'));
+
 app.use('/api/transactions', require('./routes/transactionRoutes'));
 
 // Error handling middleware
@@ -41,6 +42,9 @@ app.use((err, req, res, next) => {
         message: err.message,
         stack: process.env.NODE_ENV === 'production' ? null : err.stack,
     });
+});
+app.get('/', (req, res) => {
+    res.send('Expense Tracker API is running 🚀');
 });
 
 const PORT = process.env.PORT || 5000;
